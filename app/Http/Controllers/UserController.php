@@ -6,6 +6,7 @@ use App\Models\TweetPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
@@ -34,9 +35,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $tweet = TweetPost::with(['user','comments'])->find($postId);
+        $tweet = TweetPost::with(['user','comments','comments.user' ])->find($postId);
 
-        return view('user.tweet_show',compact('user','tweet'));
+        return view('user.tweet_show',compact('user','tweet','userId'));
 
     }
 
@@ -53,11 +54,31 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $unfollow = $user->followings()->detach($userId);
+        $user->followings()->detach($userId);
 
         return redirect()->route('user.show', ['userId'=>$userId]);
-        
     }
 
+    public function storeComment(Request $request, int $userId, int $postId)
+    {
+        $user = Auth::user();
+
+        // $変数 = 処理
+        // 処理の結果を変数に入れる必要があるか？？
+
+        // Userモデルから保存するパターン
+        // $user->comments()->create([
+        //     'post_id' => $postId,
+        //     'comment'=> $request->get('comment')
+        // ]);
+
+        // TweetPostモデルから保存するパターン
+        TweetPost::find($postId)->comments()->create([
+            'user_id' => $user->id,
+            'comment' => $request->get('comment')
+        ]);
+
+        return redirect()->route('user.tweet.show',['userId'=>$userId, 'postId'=>$postId]);
+    }
 
 }

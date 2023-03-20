@@ -15,6 +15,14 @@
                     <p class="text-gray-900">{{ $tweet->caption }}</p>
                   {{-- </a> --}}
             </div>
+
+            <form action="{{ route('user.store.comment',['userId'=> $userId, 'postId'=> $tweet->id]) }}" method="POST">
+              @csrf
+              <input type="text" name="comment">
+              <input type="submit" value="返信">
+
+            </form>
+
             @foreach ( $tweet->comments as $comment)
             <div class="p-6 mb-10">
                 <a href=" {{ route('user.show', ['userId'=> $comment->user->id]) }}">
