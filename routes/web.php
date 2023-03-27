@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TweetController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/tweets',[TweetController::class,'store'])->name('tweet.store');
     // // /{userID}/likes ユーザーのいいね一覧表示
     Route::get('/users/{userId}/likes',[UserController::class,'likes'])->name('user.likes');
+    Route::post('/users/{userId}/posts/{postId}/like',[UserController::class,'like'])->name('user.like');
+    Route::delete('/users/{userId}/posts/{postId}/like',[UserController::class,'unlike'])->name('user.unlike');
     // // /{userId}/following そのユーザーのフォローしているユーザー一覧
     Route::get('/users/{userId}/followings',[UserController::class,'followings'])->name('user.followig');
     Route::post('/users/{userId}/followings',[UserController::class,'follow'])->name('user.follow');
@@ -43,9 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{userId}/followers',[UserController::class,'followers'])->name('user.followers');
 
     Route::post('/users/{userId}/posts/{postId}/comments',[UserController::class,'storeComment'])->name('user.store.comment');
+
 });
 
 // // /{userId}/posts/{postId} ツイート詳細表示（自分のも同じURL）
 Route::get('/users/{userId}/posts/{postId}',[UserController::class,'tweet'])->name('user.tweet.show');
 // // /{userId} ユーザープロフィール表示
 Route::get('/users/{userId}',[UserController::class,'show'])->name('user.show');
+
+Route::get('/search',[SearchController::class,'index'])->name('search.index');

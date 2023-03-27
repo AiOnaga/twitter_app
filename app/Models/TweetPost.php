@@ -27,7 +27,7 @@ class TweetPost extends Model
 
     public function likes()
     {
-        return $this->hasManyThrough(User::class,TweetLike::class, 'post_id','user_id','id','id');
+        return $this->belongsToMany(User::class,'tweet_likes', 'post_id','user_id','id','id')->withTimestamps()->using(TweetLike::class);
     }
 
     public function photos()

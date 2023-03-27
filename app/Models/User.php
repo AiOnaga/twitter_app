@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public function likes()
     {
-        return $this->hasManyThrough(TweetPost::class,TweetLike::class,'user_id', 'post_id','id','id');
+        return $this->belongsToMany(TweetPost::class,'tweet_likes','user_id', 'post_id','id','id')->withTimestamps()->using(TweetLike::class);
     }
     
     /**

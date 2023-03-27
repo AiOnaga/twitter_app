@@ -8,12 +8,13 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div>
-                <form action="{{ route('tweet.index') }}" method="GET">
+                <form action="{{ route('search.index') }}" method="GET">
                     <input type="text" name="keyword" value="{{ $keyword }}">
                     <input type="submit" value="検索">
                 </form>
 
                 @if ($keyword)
+                <h2>投稿の検索結果</h2>
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         @foreach ($posts as $post)
                             <div class="p-6 text-gray-900">
@@ -28,30 +29,19 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <h2>ユーザーの検索結果</h2>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                      @foreach ($users as $user)
+                          <div class="p-6 text-gray-900">
+                              <a href="{{ route('user.show', ['userId' => $user->id]) }}">
+                                  <img class="object-fit w-20" src="{{ asset($user->image) }}" alt="">
+                                  <p>{{ $user->name }}</p>
+                              </a>
+                          </div>
+                      @endforeach
+                  </div>
                 @endif
-
-
-                <form action="{{ route('tweet.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="text" name="caption">
-                    <input type="file" name="image">
-                    <input type="submit" value="投稿する">
-                </form>
-            </div>
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                @foreach ($tweets as $tweet)
-                    <div class="p-6 text-gray-900">
-                        @foreach ($tweet->photos as $photo)
-                            <img class="object-fit w-20" src="{{ asset($photo->image) }}" alt="">
-                        @endforeach
-                        <a href="{{ route('user.show', ['userId' => $tweet->user->id]) }}">
-                            <p>{{ $tweet->user->name }}</p>
-                            <p>{{ $tweet->caption }}</p>
-                            <p>{{ $tweet->created_at }}</p>
-                        </a>
-                    </div>
-                @endforeach
             </div>
         </div>
     </div>

@@ -35,9 +35,29 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $tweet = TweetPost::with(['user','comments','comments.user' ])->find($postId);
+        $tweet = TweetPost::with(['user','comments','comments.user','likes'])->find($postId);
+        $isLike = $user->likes->firstWhere('id',$postId);
 
-        return view('user.tweet_show',compact('user','tweet','userId'));
+        return view('user.tweet_show',compact('user','tweet','userId','isLike'));
+
+    }
+
+    public function like(Request $request, int $userId, int $postId)
+    {
+        $user = Auth::user();
+        $like = $user->likes()->attach($postId);
+       
+        return redirect()->route('user.tweet.show',['userId'=>$userId, 'postId'=>$postId]);
+
+    }
+
+    public function unlike(int $userId, int $postId)
+    {
+        $user = Auth::user();
+
+        $user->likes()->detach($postId);
+
+        return redirect()->route('user.tweet.show',['userId'=>$userId, 'postId'=>$postId]);
 
     }
 

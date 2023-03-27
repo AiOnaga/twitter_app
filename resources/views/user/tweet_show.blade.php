@@ -14,6 +14,28 @@
                     <p class="font-extrabold">{{ $tweet->user->name }}</p>
                     <p class="text-gray-900">{{ $tweet->caption }}</p>
                   {{-- </a> --}}
+
+                    @if ($isLike)
+                      <form action="{{ route('user.unlike',['userId'=>$userId, 'postId'=>$tweet->id ]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">
+                          <i class="fa-solid fa-heart">{{ $tweet->likes->count() }}</i>
+                        </button>
+                        
+                        {{-- <input class="fa-solid fa-heart" type="submit" value=""> --}}
+                      </form>
+                    @else
+                      <form action="{{ route('user.like',['userId'=>$userId, 'postId'=>$tweet->id ]) }}" method="POST">
+                        @csrf
+                        <button type="submit">
+                          <i class="fa-regular fa-heart">  {{ $tweet->likes->count() }}</i>
+                        </button>
+                        
+                        {{-- <input class="fa-regular fa-heart" type="submit" value=""> --}}
+                      </form>
+                    @endif
+                    
             </div>
 
             <form action="{{ route('user.store.comment',['userId'=> $userId, 'postId'=> $tweet->id]) }}" method="POST">
